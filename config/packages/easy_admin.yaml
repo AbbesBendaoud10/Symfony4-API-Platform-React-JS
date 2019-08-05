@@ -1,0 +1,10 @@
+easy_admin:
+    entities:
+#        # List the entity class name you want to manage
+         - App\Entity\BlogPost
+#        - App\Entity\Category
+#        - App\Entity\User
+
+    design:
+      brand_color: '#1ABC9C'
+
