@@ -6,10 +6,17 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(
+ *     fields={"username"},
+ *     errorPath="username",
+ *     message="This username is already in use."
+ * )
  */
 class User implements UserInterface
 {
@@ -27,8 +34,21 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Regex(
+     *     pattern="/(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/",
+     *     message="Your password must contain at least one Upper, one lower and one digit"
+     * )
      */
     private $password;
+
+    /**
+     * @Assert\NotBlank
+     * @Assert\Expression(
+     *     "this.getPassword() === this.getRetypedPassword()",
+     *     message="Passwords does not match"
+     * )
+     */
+    private $retypedPassword;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -37,6 +57,10 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     checkMX = true
+     * )
      */
     private $email;
 
@@ -162,5 +186,25 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         return null;
+    }
+
+    /**
+     * Get "this.getPassword() === this.getRetypedPassword()",
+     */ 
+    public function getRetypedPassword()
+    {
+        return $this->retypedPassword;
+    }
+
+    /**
+     * Set "this.getPassword() === this.getRetypedPassword()",
+     *
+     * @return  self
+     */ 
+    public function setRetypedPassword($retypedPassword)
+    {
+        $this->retypedPassword = $retypedPassword;
+
+        return $this;
     }
 }
