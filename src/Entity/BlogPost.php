@@ -4,10 +4,21 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
- * @ApiResource()
+ * @ApiResource(
+ *      collectionOperations={
+ *         "get","post"
+ *     },
+ *      itemOperations={
+ *         "get"
+ *     },
+ *      normalizationContext={"groups"={"read"}},
+ *      denormalizationContext={"groups"={"write"}}
+ * )
  */
 class BlogPost
 {
@@ -15,28 +26,45 @@ class BlogPost
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read", "write"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("read")
      */
     private $published;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups("read")
      */
     private $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
+     * @Groups("read")
      */
     private $author;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="blogPost")
+     */
+    private $comments;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
+
+
 
     public function getId(): ?int
     {
@@ -87,6 +115,26 @@ class BlogPost
     public function setAuthor(User $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of comments
+     */ 
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * Set the value of comments
+     *
+     * @return  self
+     */ 
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
 
         return $this;
     }
