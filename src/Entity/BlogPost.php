@@ -12,12 +12,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *      collectionOperations={
  *         "get",
- *         "post"={"access_control"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')"}
+ *         "post"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY')"},
+ *         "put"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() === user"}
  *     },
  *      itemOperations={
- *         "get"
+ *         "get",
+*          "put"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() === user"}
  *     },
- *      normalizationContext={"groups"={"read"}},
+ *      normalizationContext={"groups"={"get"}},
  *      denormalizationContext={"groups"={"write"}}
  * )
  */
@@ -27,31 +29,26 @@ class BlogPost
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"read", "write"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"read", "write"})
      */
     private $published;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"read", "write"})
      */
     private $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
-     * @Groups({"read", "write"})
      */
     private $author;
 

@@ -11,7 +11,7 @@ use App\Entity\User;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\BlogPost;
 use App\Repository\UserRepository;
-use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 
 class AuhtorAddSubscriber implements EventSubscriberInterface
@@ -42,6 +42,6 @@ class AuhtorAddSubscriber implements EventSubscriberInterface
             return;
         }
         $author = $this->tokenStorage->getToken()->getUser();
-        $blogPost->setAuthor($this->user->find(8));
+        $blogPost->setAuthor($author);
     }
 }
