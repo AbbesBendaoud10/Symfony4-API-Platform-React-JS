@@ -11,7 +11,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
  * @ApiResource(
  *      collectionOperations={
- *         "get","post"
+ *         "get",
+ *         "post"={"access_control"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')"}
  *     },
  *      itemOperations={
  *         "get"
@@ -38,19 +39,19 @@ class BlogPost
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups("read")
+     * @Groups({"read", "write"})
      */
     private $published;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups("read")
+     * @Groups({"read", "write"})
      */
     private $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
-     * @Groups("read")
+     * @Groups({"read", "write"})
      */
     private $author;
 
@@ -112,7 +113,7 @@ class BlogPost
         return $this->author;
     }
 
-    public function setAuthor(User $author): self
+    public function setAuthor(?User $author): self
     {
         $this->author = $author;
 

@@ -10,7 +10,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * collectionOperations={
+ *  "get"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY')"}
+ * }
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(
  *     fields={"username"},
