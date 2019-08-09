@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
@@ -28,7 +29,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     },
  * )
  */
-class BlogPost
+class BlogPost implements AuthorisedEntityInterface, PublishedDateInterface
 {
     /**
      * @ORM\Id()
@@ -94,7 +95,7 @@ class BlogPost
         return $this->published;
     }
 
-    public function setPublished(\DateTimeInterface $published): self
+    public function setPublished(\DateTimeInterface $published): PublishedDateInterface
     {
         $this->published = $published;
 
@@ -118,7 +119,7 @@ class BlogPost
         return $this->author;
     }
 
-    public function setAuthor(?User $author): self
+    public function setAuthor(UserInterface $author): AuthorisedEntityInterface
     {
         $this->author = $author;
 

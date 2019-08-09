@@ -12,6 +12,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\BlogPost;
 use App\Repository\UserRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\Entity\Comment;
+use App\Entity\AuthorisedEntityInterface;
 
 
 class AuhtorAddSubscriber implements EventSubscriberInterface
@@ -35,13 +37,13 @@ class AuhtorAddSubscriber implements EventSubscriberInterface
 
     public function authorAdd(GetResponseForControllerResultEvent $event)
     {
-        $blogPost = $event->getControllerResult();
+        $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        if (!$blogPost instanceof BlogPost || Request::METHOD_POST !== $method){
+        if ((!$entity instanceof AuthorisedEntityInterface) || Request::METHOD_POST !== $method){
             return;
         }
         $author = $this->tokenStorage->getToken()->getUser();
-        $blogPost->setAuthor($author);
+        $entity->setAuthor($author);
     }
 }

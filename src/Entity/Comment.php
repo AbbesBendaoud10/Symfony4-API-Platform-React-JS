@@ -4,12 +4,13 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
  */
-class Comment
+class Comment implements AuthorisedEntityInterface, PublishedDateInterface
 {
     /**
      * @ORM\Id()
@@ -61,7 +62,7 @@ class Comment
         return $this->published;
     }
 
-    public function setPublished(\DateTimeInterface $published): self
+    public function setPublished(\DateTimeInterface $published): PublishedDateInterface
     {
         $this->published = $published;
 
@@ -81,13 +82,12 @@ class Comment
      *
      * @return  self
      */ 
-    public function setAuthor(User $author)
+    public function setAuthor(UserInterface $author): AuthorisedEntityInterface
     {
         $this->author = $author;
 
         return $this;
     }
-
     /**
      * Get the value of blogPost
      */ 
