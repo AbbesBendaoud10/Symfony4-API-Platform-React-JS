@@ -10,17 +10,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
  * @ApiResource(
+ * attributes={
+ *     "normalization_context"={"groups"={"get"}},
+ *     "denormalization_context"={"groups"={"put"}}
+ * })
  *      collectionOperations={
- *         "get",
+ *          "get"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY')",           
+ *          normalizationContext={"groups"={"get"}},
  *         "post"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY')"},
  *         "put"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() === user"}
  *     },
  *      itemOperations={
- *         "get",
-*          "put"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() === user"}
+ *          "get"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY')",           
+ *          normalizationContext={"groups"={"get"}},
+ *          "put"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() === user",           
+ *          denormalizationContext={"groups"={"put"}},}
  *     },
- *      normalizationContext={"groups"={"get"}},
- *      denormalizationContext={"groups"={"write"}}
  * )
  */
 class BlogPost
@@ -34,16 +39,19 @@ class BlogPost
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get", "put"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("get")
      */
     private $published;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups("get")
      */
     private $content;
 
