@@ -8,5 +8,5 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 interface AuthorisedEntityInterface
 {
-    public function setPublised(UserInterface $user): AuthorisedEntityInterface;
+    public function setAuthor(UserInterface $user): AuthorisedEntityInterface;
 }

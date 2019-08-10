@@ -7,26 +7,35 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
  * @ApiResource(
- * attributes={
- *     "normalization_context"={"groups"={"get"}},
- *     "denormalization_context"={"groups"={"put"}}
- * })
- *      collectionOperations={
- *          "get"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY')",           
- *          normalizationContext={"groups"={"get"}},
- *         "post"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY')"},
- *         "put"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() === user"}
+ *     attributes={"order"={"published": "DESC"}, "maximum_items_per_page"=30},
+ *     itemOperations={
+ *         "get"={
+ *             "normalization_context"={
+ *                 "groups"={"get-blog-post-with-author"}
+ *             }
+ *          },
+ *         "put"={
+ *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
+ *         }
  *     },
- *      itemOperations={
- *          "get"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY')",           
- *          normalizationContext={"groups"={"get"}},
- *          "put"={"access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() === user",           
- *          denormalizationContext={"groups"={"put"}},}
+ *     collectionOperations={
+ *         "get"={
+ *             "normalization_context"={
+ *                 "groups"={"get-blog-post-with-author"}
+ *             }
+ *          },
+ *         "post"={
+ *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
+ *         }
  *     },
+ *     denormalizationContext={
+ *         "groups"={"post"}
+ *     }
  * )
  */
 class BlogPost implements AuthorisedEntityInterface, PublishedDateInterface
@@ -40,29 +49,31 @@ class BlogPost implements AuthorisedEntityInterface, PublishedDateInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get", "put"})
+     * @Groups({"get-blog-post-with-author","get", "post"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups("get")
      */
     private $published;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups("get")
+     * @Groups({"post", "get-blog-post-with-author"})
      */
     private $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
+     * @Groups({"get-blog-post-with-author", "get"})
      */
     private $author;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="blogPost")
+     * @ApiSubresource
+     * @Groups({"get-blog-post-with-author", "get-blog-post-with-comments"})
      */
     private $comments;
 

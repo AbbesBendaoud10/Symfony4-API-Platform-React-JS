@@ -5,9 +5,34 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     itemOperations={
+ *         "get",
+ *         "put"={
+ *             "access_control"="is_granted('ROLE_EDITOR') or (is_granted('ROLE_COMMENTATOR') and object.getAuthor() == user)"
+ *         }
+ *     },
+ *     collectionOperations={
+ *         "get",
+ *         "post"={
+ *             "access_control"="is_granted('ROLE_COMMENTATOR')",
+ *             "normalization_context"={
+ *                 "groups"={"get-comment-with-author"}
+ *             }
+ *         },
+ *         "api_blog_posts_comments_get_subresource"={
+ *             "normalization_context"={
+ *                 "groups"={"get-comment-with-author"}
+ *             }
+ *         }
+ *     },
+ *     denormalizationContext={
+ *         "groups"={"post"}
+ *     }
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
  */
 class Comment implements AuthorisedEntityInterface, PublishedDateInterface
@@ -21,6 +46,7 @@ class Comment implements AuthorisedEntityInterface, PublishedDateInterface
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"get-comment-with-author", "get-blog-post-with-comments"})
      */
     private $content;
 
@@ -31,6 +57,7 @@ class Comment implements AuthorisedEntityInterface, PublishedDateInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
+     * @Groups("get-comment-with-author")
      */
     private $author;
 

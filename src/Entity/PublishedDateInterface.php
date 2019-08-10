@@ -8,5 +8,5 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 interface PublishedDateInterface
 {
-    public function setAuthor(\DateTimeInterface $user): PublishedDateInterface;
+    public function setPublished(\DateTimeInterface $user): PublishedDateInterface;
 }
