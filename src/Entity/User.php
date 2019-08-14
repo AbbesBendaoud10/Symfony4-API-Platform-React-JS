@@ -30,7 +30,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *         },
  *     },
  *     collectionOperations={
- *          "get",
+ *         "get"={
+ *             "access_control"="is_granted('ROLE_COMMENTATOR')",
+ *             "normalization_context"={
+ *                 "groups"={"get"}
+ *             }
+ *         },
  *         "post"={
  *             "denormalization_context"={
  *                 "groups"={"post"}
@@ -55,7 +60,7 @@ class User implements UserInterface
     const ROLE_WRITER = "ROLE_WRITER"; 
     const ROLE_EDITOR = "ROLE_EDITOR"; 
     const ROLE_ADMIN = "ROLE_ADMIN"; 
-    const ROLE_SUPER_ADMIN = "ROLE_SUPER_ADMIN";
+    const ROLE_SUPERADMIN = "ROLE_SUPERADMIN";
 
     const DEFAULT_ROLES = [self::ROLE_COMMENTATOR];
     
@@ -68,7 +73,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get-blog-post-with-author", "post"})
+     * @Groups({"get-blog-post-with-author", "post", "get"})
      */
     private $username;
 
@@ -104,7 +109,7 @@ class User implements UserInterface
      *     message = "The email '{{ value }}' is not a valid email.",
      *     checkMX = true
      * )
-     * @Groups({"get-blog-post-with-author", "post"})
+     * @Groups({"get-blog-post-with-author", "post", "get"})
      */
     private $email;
 

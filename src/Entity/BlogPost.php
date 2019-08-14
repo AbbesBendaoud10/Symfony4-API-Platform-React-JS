@@ -17,7 +17,8 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *         "get"={
  *             "normalization_context"={
  *                 "groups"={"get-blog-post-with-author"}
- *             }
+ *             },
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
  *          },
  *         "put"={
  *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
@@ -27,10 +28,11 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *         "get"={
  *             "normalization_context"={
  *                 "groups"={"get-blog-post-with-author"}
- *             }
+ *             },
+ *          "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
  *          },
  *         "post"={
- *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
+ *             "access_control"="is_granted('ROLE_EDITOR')"
  *         }
  *     },
  *     denormalizationContext={
