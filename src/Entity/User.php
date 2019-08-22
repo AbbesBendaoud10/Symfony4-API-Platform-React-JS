@@ -109,7 +109,7 @@ class User implements UserInterface
      *     message = "The email '{{ value }}' is not a valid email.",
      *     checkMX = true
      * )
-     * @Groups({"get-blog-post-with-author", "post", "get"})
+     * @Groups({"get-blog-post-with-author", "post", "get-admin"})
      */
     private $email;
 
