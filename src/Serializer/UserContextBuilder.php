@@ -6,6 +6,7 @@ use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+
 class UserContextBuilder implements SerializerContextBuilderInterface
 {
     /**
@@ -45,7 +46,7 @@ class UserContextBuilder implements SerializerContextBuilderInterface
             User::class === $resourceClass &&
             isset($context['groups']) &&
             $normalization === true &&
-            $this->authorizationChecker->isGranted(User::ROLE_ADMIN)
+            $this->authorizationChecker->isGranted(User::ROLE_SUPERADMIN)
         ) {
             $context['groups'][] = 'get-admin';
         }

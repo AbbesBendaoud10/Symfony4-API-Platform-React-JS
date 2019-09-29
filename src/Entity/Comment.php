@@ -46,7 +46,7 @@ class Comment implements AuthorisedEntityInterface, PublishedDateInterface
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"get-comment-with-author", "get-blog-post-with-comments"})
+     * @Groups({"get-comment-with-author"})
      */
     private $content;
 
@@ -57,7 +57,7 @@ class Comment implements AuthorisedEntityInterface, PublishedDateInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
-     * @Groups("get-comment-with-author")
+     * @Groups({"get-comment-with-author"})
      */
     private $author;
 

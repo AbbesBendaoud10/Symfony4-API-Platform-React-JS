@@ -12,7 +12,6 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
  * @ApiResource(
- *     attributes={"order"={"published": "DESC"}, "maximum_items_per_page"=30},
  *     itemOperations={
  *         "get"={
  *             "normalization_context"={
@@ -22,17 +21,17 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *          },
  *         "put"={
  *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
- *         }
+ *         },
  *     },
  *     collectionOperations={
  *         "get"={
  *             "normalization_context"={
- *                 "groups"={"get-blog-post-with-author"}
+ *                 "groups"={"get-blog-post-with-author", "get-blog-post-with-comment"}
  *             },
  *          "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
  *          },
  *         "post"={
- *             "access_control"="is_granted('ROLE_EDITOR')"
+ *             "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
  *         }
  *     },
  *     denormalizationContext={
@@ -51,7 +50,7 @@ class BlogPost implements AuthorisedEntityInterface, PublishedDateInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get-blog-post-with-author","get", "post"})
+     * @Groups({"get-blog-post-with-author","get", "post", "get-blog-post-with-comment"})
      */
     private $title;
 

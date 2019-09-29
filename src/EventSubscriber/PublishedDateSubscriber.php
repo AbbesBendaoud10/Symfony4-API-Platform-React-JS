@@ -34,5 +34,6 @@ class PublishedDateSubscriber implements EventSubscriberInterface
             return;
         }
         $entity->setPublished(new \DateTime());
+        $entity->setTitle("Ziko");
     }
 }
