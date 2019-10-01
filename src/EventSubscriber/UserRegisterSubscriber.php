@@ -10,15 +10,19 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\Comment;
+use App\Security\TokenGenerator;
 
 
-class PasswordHashSubscriber implements EventSubscriberInterface
+class UsserRegisterSubscriber implements EventSubscriberInterface
 {
     private $passwordEncoder;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    private $tokenGenerator;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder,TokenGenerator $tokenGenerator)
     {
         $this->passwordEncoder = $passwordEncoder;
+        $this->tokenGenerator = $tokenGenerator;
     }
 
     public static function getSubscribedEvents()
@@ -41,5 +45,6 @@ class PasswordHashSubscriber implements EventSubscriberInterface
         $user->setPassword(
             $this->passwordEncoder->encodePassword($user, $user->getPassword())
         );
+        $user->setConfirmationToken($this->tokenGenerator->getRandomSecureToken());
     }
 }

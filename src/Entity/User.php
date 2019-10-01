@@ -167,7 +167,7 @@ class User implements UserInterface
     private $enabled;
 
     /**
-     * @ORM\Column(type="string", length=40)
+     * @ORM\Column(type="string", length=40, nullable=true)
      */
     private $confirmationToken;
 

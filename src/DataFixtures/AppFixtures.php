@@ -9,6 +9,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use App\Security\TokenGenerator;
 
 class AppFixtures extends Fixture
 {
@@ -76,7 +77,7 @@ class AppFixtures extends Fixture
     private $tokenGenerator;
     public function __construct(
         UserPasswordEncoderInterface $passwordEncoder,
-        TokenGeneratorInterface $tokenGenerator
+        TokenGenerator $tokenGenerator
     )
     {
         $this->passwordEncoder = $passwordEncoder;
@@ -137,6 +138,10 @@ class AppFixtures extends Fixture
             );
             $user->setRoles($userFixture['roles']);
             $user->setEnabled(false);
+            
+            if (!$userFixture['enabled']){
+                $user->setConfirmationToken($this->tokenGenerator->getRandomSecureToken());
+            }
             $this->addReference('user_'.$userFixture['username'], $user);
             $manager->persist($user);
         }
