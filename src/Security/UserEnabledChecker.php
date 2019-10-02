@@ -17,7 +17,7 @@ class UserEnabledChecker implements UserCheckerInterface{
         }
 
         if(!$user->getEnabled()){
-            throw new DisabledException();
+            throw new DisabledException("tameres");
         }
     }
 

@@ -43,6 +43,7 @@ class AuhtorAddSubscriber implements EventSubscriberInterface
         if ((!$entity instanceof AuthorisedEntityInterface) || Request::METHOD_POST !== $method){
             return;
         }
+        
         $author = $this->tokenStorage->getToken()->getUser();
         $entity->setAuthor($author);
     }

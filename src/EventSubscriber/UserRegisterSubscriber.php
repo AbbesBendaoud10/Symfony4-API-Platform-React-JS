@@ -13,7 +13,7 @@ use App\Entity\Comment;
 use App\Security\TokenGenerator;
 
 
-class UsserRegisterSubscriber implements EventSubscriberInterface
+class UserRegisterSubscriber implements EventSubscriberInterface
 {
     private $passwordEncoder;
 
