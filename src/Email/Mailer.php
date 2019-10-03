@@ -2,6 +2,9 @@
 
 namespace App\Email;
 
+use App\Entity\User;
+
+
 class Mailer{
 
     private $mailer;
@@ -17,10 +20,10 @@ class Mailer{
         $body = $this->twig->render('email/confirmation.html.twig',[
             'user' => $user
         ]);         
-        $message = (new \Swift_Message("Hello"))
+        $message = (new \Swift_Message("Please confirm your account"))
         ->setFrom("imen.sliti100@gmail.com")
         ->setTo($user->getEmail())
-        ->setBody($body); 
+        ->setBody($body, 'text/html'); 
     
         $this->mailer->send($message);
     }

@@ -1,7 +1,7 @@
 <h3>Hello
-    {{user->name}}
+    {{user.getName()}}
 </h3>
 
 <p>Can you please confirm
-    <a href="">Confirm</a>
+    <a href="{{ path('confirm_user', {token: user.getConfirmationToken()}) }}">Confirm</a>
 </p>
