@@ -11,6 +11,7 @@ use App\Entity\User;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\Comment;
 use App\Security\TokenGenerator;
+use App\Email\Mailer;
 
 
 class UserRegisterSubscriber implements EventSubscriberInterface
@@ -21,7 +22,7 @@ class UserRegisterSubscriber implements EventSubscriberInterface
 
     private $mailer;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder,TokenGenerator $tokenGenerator, \Swift_Mailer $mailer)
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder,TokenGenerator $tokenGenerator, Mailer $mailer)
     {
         $this->passwordEncoder = $passwordEncoder;
         $this->tokenGenerator = $tokenGenerator;
@@ -48,13 +49,10 @@ class UserRegisterSubscriber implements EventSubscriberInterface
         $user->setPassword(
             $this->passwordEncoder->encodePassword($user, $user->getPassword())
         );
+
         $user->setConfirmationToken($this->tokenGenerator->getRandomSecureToken());
         
         // Sending Email Confirmation
-        $message = (new \Swift_Message("Hello"))
-            ->setFrom("imen.sliti100@gmail.com")
-            ->setTo("farhatabbes.bendaoud@esprit.tn")
-            ->setBody("Hi How are you"); 
-        $this->mailer->send($message);
+        $this->mailer->senConfirmationEmail($user);
     }
 }
