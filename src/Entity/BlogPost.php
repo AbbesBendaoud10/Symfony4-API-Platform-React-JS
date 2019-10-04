@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use App\Entity\Image;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
@@ -78,9 +80,19 @@ class BlogPost implements AuthorisedEntityInterface, PublishedDateInterface
      */
     private $comments;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Image")
+     * @ORM\JoinTable()
+     * @ApiSubresource
+     * @Groups({"post", "get-blog-post-with-author"})
+     */
+
+    private $images;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
 
@@ -156,5 +168,21 @@ class BlogPost implements AuthorisedEntityInterface, PublishedDateInterface
         $this->comments = $comments;
 
         return $this;
+    }
+
+    /**
+     * Get the value of images
+     */ 
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image){
+        $this->images->add($image);
+    }
+
+    public function removeImage(Image $image){
+        $this->images->removeElement($image);
     }
 }
