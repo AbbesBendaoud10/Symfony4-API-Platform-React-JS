@@ -10,9 +10,49 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Entity\Image;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={
+ *          "title": "partial",
+ *          "author.name": "partial"
+ *      }
+ * )
+ * @ApiFilter(
+ *      DateFilter::class,
+ *      properties={
+ *          "published"
+ *      }
+ * )
+ * @ApiFilter(
+ *      RangeFilter::class,
+ *      properties={
+ *          "id"
+ *      }
+ * )
+ * @ApiFilter(
+ *      OrderFilter::class,
+ *      properties={
+ *          "id",
+ *          "title"
+ *      }
+ * )
+ * @ApiFilter(
+ *      PropertyFilter::class,
+ *      arguments={
+ *          "parameterName": "properties",
+ *          "overrideDefaultProperties": false,
+ *          "whitelist": {"allowed_property"}
+ *      }
+ * )
  * @ApiResource(
  *     itemOperations={
  *         "get"={
