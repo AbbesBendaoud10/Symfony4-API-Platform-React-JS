@@ -27,7 +27,7 @@ class UserConfirmationService{
         );
 
         if(!$user){
-            throw new NotFoundHttpException();    
+            throw new NotFoundHttpException("Not Found");    
         }
 
         $user

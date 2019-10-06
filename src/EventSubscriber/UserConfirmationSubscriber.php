@@ -33,6 +33,7 @@ class UserConfirmationSubscriber implements EventSubscriberInterface{
     }
 
     public function confirmUser(GetResponseForControllerResultEvent $event){
+        
         $request = $event->getRequest();
 
         if($request->get("_route") !== "api_user_confirmations_post_collection"){

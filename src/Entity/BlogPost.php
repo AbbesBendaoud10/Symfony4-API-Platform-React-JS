@@ -16,7 +16,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
  * @ApiFilter(
@@ -78,7 +78,8 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
  *     },
  *     denormalizationContext={
  *         "groups"={"post"}
- *     }
+ *     },
+ *      
  * )
  */
 class BlogPost implements AuthorisedEntityInterface, PublishedDateInterface
@@ -110,6 +111,7 @@ class BlogPost implements AuthorisedEntityInterface, PublishedDateInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
      * @Groups({"get-blog-post-with-author", "get"})
+     * @Assert\NotBlank
      */
     private $author;
 
@@ -224,5 +226,10 @@ class BlogPost implements AuthorisedEntityInterface, PublishedDateInterface
 
     public function removeImage(Image $image){
         $this->images->removeElement($image);
+    }
+
+    public function __toString(): string
+    {
+        return $this->title;
     }
 }

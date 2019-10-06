@@ -71,7 +71,7 @@ class Image
      */ 
     public function getUrl()
     {
-        return $this->url;
+        return '/images/'.$this->url;
     }
 
     /**
@@ -84,5 +84,10 @@ class Image
         $this->url = $url;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->url;
     }
 }
