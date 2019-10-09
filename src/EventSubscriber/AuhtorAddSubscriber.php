@@ -22,9 +22,8 @@ class AuhtorAddSubscriber implements EventSubscriberInterface
 
     private  $tokenStorage;
 
-    public function __construct(UserRepository $user, TokenStorageInterface $tokenStorage)
+    public function __construct(TokenStorageInterface $tokenStorage)
     {
-        $this->user = $user;
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -39,12 +38,13 @@ class AuhtorAddSubscriber implements EventSubscriberInterface
     {
         $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
-
+        
+        $author = $this->tokenStorage->getToken()->getUser();
+        
         if ((!$entity instanceof AuthorisedEntityInterface) || Request::METHOD_POST !== $method){
             return;
         }
         
-        $author = $this->tokenStorage->getToken()->getUser();
         $entity->setAuthor($author);
     }
 }

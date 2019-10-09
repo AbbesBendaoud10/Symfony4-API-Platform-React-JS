@@ -17,7 +17,6 @@ use App\Security\UserConfirmationService;
 
 class UserConfirmationSubscriber implements EventSubscriberInterface{
     
-
     private $userConfirmationService;
     
     public function __construct(UserConfirmationService $userConfirmationService)
